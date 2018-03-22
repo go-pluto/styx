@@ -28,17 +28,22 @@ type Result struct {
 	Values map[string]string
 }
 
-func Query(host string, start time.Time, end time.Time, query string) ([]Result, error) {
+func Query(host string, start time.Time, end time.Time, query string, step int) ([]Result, error) {
 	u, err := url.Parse(host)
 	if err != nil {
 		return nil, err
 	}
+
+	if step == 0 {
+		step = steps(end.Sub(start))
+	}
+
 	u.Path = "/api/v1/query_range"
 	q := u.Query()
 	q.Set("query", query)
 	q.Set("start", fmt.Sprintf("%d", start.Unix()))
 	q.Set("end", fmt.Sprintf("%d", end.Unix()))
-	q.Set("step", fmt.Sprintf("%d", steps(end.Sub(start))))
+	q.Set("step", fmt.Sprintf("%d", step))
 	u.RawQuery = q.Encode()
 
 	response, err := http.Get(u.String())

@@ -26,7 +26,7 @@ func gnuplotAction(c *cli.Context) error {
 	end := time.Now()
 	start := end.Add(-1 * gnuplotFlag.Duration)
 
-	results, err := Query(gnuplotFlag.Prometheus, start, end, c.Args().First())
+	results, err := Query(gnuplotFlag.Prometheus, start, end, c.Args().First(), 0)
 	if err != nil {
 		return err
 	}
