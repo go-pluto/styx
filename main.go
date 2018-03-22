@@ -17,9 +17,9 @@ func main() {
 
 	app.Action = exportAction
 	app.Flags = []cli.Flag{
-		cli.IntFlag{
+		cli.DurationFlag{
 			Name:        "step,s",
-			Usage:       "Step size in result data, in seconds",
+			Usage:       "Step size in result data",
 			Value:       0,
 			Destination: &flag.Step,
 		},
@@ -96,7 +96,7 @@ type flags struct {
 	Duration   time.Duration
 	Header     bool
 	Prometheus string
-	Step       int
+	Step       time.Duration
 }
 
 var flag flags
