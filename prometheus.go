@@ -93,7 +93,7 @@ func steps(dur time.Duration) time.Duration {
 		return 1 * time.Second
 	}
 	if dur < 30*time.Minute {
-		return 1 * time.Second
+		return 3 * time.Second
 	}
 	return time.Duration(dur / 254)
 }
