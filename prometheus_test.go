@@ -8,17 +8,17 @@ import (
 )
 
 func TestSteps(t *testing.T) {
-	assert.Equal(t, 1, steps(time.Minute))
-	assert.Equal(t, 1, steps(5*time.Minute))
-	assert.Equal(t, 3, steps(15*time.Minute))
-	assert.Equal(t, 7, steps(30*time.Minute))
-	assert.Equal(t, 14, steps(time.Hour))
-	assert.Equal(t, 28, steps(2*time.Hour))
-	assert.Equal(t, 85, steps(6*time.Hour))
-	assert.Equal(t, 171, steps(12*time.Hour))
-	assert.Equal(t, 342, steps(24*time.Hour))
-	assert.Equal(t, 685, steps(48*time.Hour))
-	assert.Equal(t, 2400, steps(168*time.Hour))
+	assert.InEpsilon(t, 1*time.Second, steps(time.Minute), 0.01)
+	assert.InEpsilon(t, 1*time.Second, steps(5*time.Minute), 0.01)
+	assert.InEpsilon(t, 3*time.Second, steps(15*time.Minute), 0.01)
+	assert.InEpsilon(t, 7*time.Second, steps(30*time.Minute), 0.02)
+	assert.InEpsilon(t, 14*time.Second, steps(time.Hour), 0.02)
+	assert.InEpsilon(t, 28*time.Second, steps(2*time.Hour), 0.02)
+	assert.InEpsilon(t, 85*time.Second, steps(6*time.Hour), 0.01)
+	assert.InEpsilon(t, 171*time.Second, steps(12*time.Hour), 0.01)
+	assert.InEpsilon(t, 342*time.Second, steps(24*time.Hour), 0.01)
+	assert.InEpsilon(t, 685*time.Second, steps(48*time.Hour), 0.01)
+	assert.InEpsilon(t, 2400*time.Second, steps(168*time.Hour), 0.01)
 }
 
 func TestMetricName(t *testing.T) {
