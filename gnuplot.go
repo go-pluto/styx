@@ -39,14 +39,22 @@ func gnuplotAction(c *cli.Context) error {
 
 	buf := bytes.NewBufferString(header)
 
-	for i, result := range results {
-		plot := fmt.Sprintf("plot '-' using 1:%d with lines lw 1 title '%s'\n", i+2, escapeMetricName(result.Metric))
-		buf.WriteString(plot)
-	}
-
+	buf.WriteString("$DATA << EOD\n")
 	if err := csvWriter(buf, results); err != nil {
 		return err
 	}
+	buf.WriteString("EOD\n")
+
+	for i, result := range results {
+		if i == 0 {
+			buf.WriteString("plot ")
+		} else {
+			buf.WriteString(", ")
+		}
+		plot := fmt.Sprintf("$DATA using 1:%d with lines lw 1 title '%s'", i+2, escapeMetricName(result.Metric))
+		buf.WriteString(plot)
+	}
+	buf.WriteString("\n")
 
 	fmt.Printf("%s\n", buf.String())
 
