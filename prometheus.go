@@ -33,7 +33,11 @@ func Query(host string, start time.Time, end time.Time, query string) ([]Result,
 	if err != nil {
 		return nil, err
 	}
-	u.Path = "/api/v1/query_range"
+	api_path, err := url.Parse("api/v1/query_range")
+	if err != nil {
+		return nil, err
+	}
+	u = u.ResolveReference(api_path)
 	q := u.Query()
 	q.Set("query", query)
 	q.Set("start", fmt.Sprintf("%d", start.Unix()))
