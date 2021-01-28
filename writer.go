@@ -51,6 +51,7 @@ func csvHeaderWriter(w io.Writer, results []Result) error {
 		header = append(header, result.Metric)
 	}
 
+	fmt.Fprintln(w, strings.Join(header, ";"))
 	return nil
 }
 
