@@ -4,20 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli/v2"
 )
-
-type matplotlibFlags struct {
-	Duration   time.Duration
-	Start	   cli.Timestamp
-	Prometheus string
-	Title      string
-}
-
-var matplotlibFlag matplotlibFlags
 
 func matplotlibAction(c *cli.Context) error {
 	if !c.Args().Present() {
@@ -25,9 +15,10 @@ func matplotlibAction(c *cli.Context) error {
 	}
 
 	start := c.Timestamp("start")
-	end := start.Add(flag.Duration)
+	end := start.Add(c.Duration("duration"))
+	prometheus := c.String("prometheus")
 
-	results, err := Query(matplotlibFlag.Prometheus, *start, end, c.Args().First())
+	results, err := Query(prometheus, *start, end, c.Args().First())
 	if err != nil {
 		return err
 	}

@@ -21,7 +21,6 @@ func main() {
 			Name:        "duration,d",
 			Usage:       "The duration to get timeseries from",
 			Value:       time.Hour,
-			Destination: &flag.Duration,
 		},
 		&cli.TimestampFlag{
 			Name:        "start,s",
@@ -31,12 +30,10 @@ func main() {
 		&cli.BoolFlag{
 			Name:        "header",
 			Usage:       "Include a header into the csv file",
-			Destination: &flag.Header,
 		},
 		&cli.StringFlag{
 			Name:        "prometheus",
 			Value:       "http://localhost:9090",
-			Destination: &flag.Prometheus,
 		},
 	}
 
@@ -48,13 +45,11 @@ func main() {
 			&cli.StringFlag{
 				Name:        "prometheus",
 				Value:       "http://localhost:9090",
-				Destination: &gnuplotFlag.Prometheus,
 			},
 			&cli.DurationFlag{
 				Name:        "duration,d",
 				Usage:       "The duration to get timeseries from",
 				Value:       time.Hour,
-				Destination: &gnuplotFlag.Duration,
 			},
 			&cli.TimestampFlag{
 				Name:        "start,s",
@@ -64,7 +59,6 @@ func main() {
 			&cli.StringFlag{
 				Name:        "title",
 				Usage:       "Give the gnuplot graph a title",
-				Destination: &gnuplotFlag.Title,
 			},
 		},
 	}, {
@@ -75,13 +69,11 @@ func main() {
 			&cli.StringFlag{
 				Name:        "prometheus",
 				Value:       "http://localhost:9090",
-				Destination: &matplotlibFlag.Prometheus,
 			},
 			&cli.DurationFlag{
 				Name:        "duration,d",
 				Usage:       "The duration to get timeseries from",
 				Value:       time.Hour,
-				Destination: &matplotlibFlag.Duration,
 			},
 			&cli.TimestampFlag{
 				Name:        "start,s",
@@ -91,7 +83,6 @@ func main() {
 			&cli.StringFlag{
 				Name:        "title",
 				Usage:       "Give the gnuplot graph a title",
-				Destination: &matplotlibFlag.Title,
 			},
 		},
 	}}
@@ -101,32 +92,25 @@ func main() {
 	}
 }
 
-type flags struct {
-	Duration   time.Duration
-	Start      time.Time
-	Header     bool
-	Prometheus string
-}
-
-var flag flags
-
 func exportAction(c *cli.Context) error {
 	if !c.Args().Present() {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
 
 	start := c.Timestamp("start")
-	end := start.Add(flag.Duration)
+	end := start.Add(c.Duration("duration"))
+	prometheus := c.String("prometheus")
 
 	// fmt.Printf("Querying %s from %s to %s\n", c.Args().First(), *start, end)
 
-	results, err := Query(flag.Prometheus, *start, end, c.Args().First())
+	results, err := Query(prometheus, *start, end, c.Args().First())
 	if err != nil {
 		return err
 	}
 
-	// Only add a line as header when the flag is true, which is the default
-	if flag.Header {
+	// Only add a line as header when the flag is true
+	header := c.Bool("header")
+	if header {
 		if err := csvHeaderWriter(os.Stdout, results); err != nil {
 			return err
 		}
