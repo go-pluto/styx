@@ -26,6 +26,7 @@ func main() {
 		cli.DurationFlag{
 			Name:        "start,s",
 			Usage:       "The start time to get timeseries from",
+			Value:       time.Hour,
 			Destination: &flag.Start,
 		},
 		cli.BoolTFlag{
@@ -56,6 +57,12 @@ func main() {
 				Value:       time.Hour,
 				Destination: &gnuplotFlag.Duration,
 			},
+			cli.DurationFlag{
+				Name:        "start,s",
+				Usage:       "The start time to get timeseries from",
+				Value:       time.Hour,
+				Destination: &gnuplotFlag.Start,
+			},
 			cli.StringFlag{
 				Name:        "title",
 				Usage:       "Give the gnuplot graph a title",
@@ -78,6 +85,12 @@ func main() {
 				Value:       time.Hour,
 				Destination: &matplotlibFlag.Duration,
 			},
+			cli.DurationFlag{
+				Name:        "start,s",
+				Usage:       "The start time to get timeseries from",
+				Value:       time.Hour,
+				Destination: &matplotlibFlag.Start,
+			},
 			cli.StringFlag{
 				Name:        "title",
 				Usage:       "Give the gnuplot graph a title",
@@ -93,6 +106,7 @@ func main() {
 
 type flags struct {
 	Duration   time.Duration
+	Start      time.Time
 	Header     bool
 	Prometheus string
 }
