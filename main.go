@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -17,53 +17,53 @@ func main() {
 
 	app.Action = exportAction
 	app.Flags = []cli.Flag{
-		cli.DurationFlag{
+		&cli.DurationFlag{
 			Name:        "duration,d",
 			Usage:       "The duration to get timeseries from",
 			Value:       time.Hour,
 			Destination: &flag.Duration,
 		},
-		cli.TimestampFlag{
+		&cli.TimestampFlag{
 			Name:        "start,s",
 			Usage:       "The start time to get timeseries from",
 			Layout: 	 "2006-01-02T15:04:05",
 			Destination: &flag.Start,
 		},
-		cli.BoolTFlag{
+		&cli.BoolFlag{
 			Name:        "header",
 			Usage:       "Include a header into the csv file",
 			Destination: &flag.Header,
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:        "prometheus",
 			Value:       "http://localhost:9090",
 			Destination: &flag.Prometheus,
 		},
 	}
 
-	app.Commands = []cli.Command{{
+	app.Commands = []*cli.Command{{
 		Name:   "gnuplot",
 		Usage:  "Directly plot a graph with gnuplot",
 		Action: gnuplotAction,
 		Flags: []cli.Flag{
-			cli.StringFlag{
+			&cli.StringFlag{
 				Name:        "prometheus",
 				Value:       "http://localhost:9090",
 				Destination: &gnuplotFlag.Prometheus,
 			},
-			cli.DurationFlag{
+			&cli.DurationFlag{
 				Name:        "duration,d",
 				Usage:       "The duration to get timeseries from",
 				Value:       time.Hour,
 				Destination: &gnuplotFlag.Duration,
 			},
-			cli.TimestampFlag{
+			&cli.TimestampFlag{
 				Name:        "start,s",
 				Usage:       "The start time to get timeseries from",
 				Layout: 	 "2006-01-02T15:04:05",
 				Destination: &gnuplotFlag.Start,
 			},
-			cli.StringFlag{
+			&cli.StringFlag{
 				Name:        "title",
 				Usage:       "Give the gnuplot graph a title",
 				Destination: &gnuplotFlag.Title,
@@ -74,24 +74,24 @@ func main() {
 		Usage:  "Generate a file that uses matplotlib",
 		Action: matplotlibAction,
 		Flags: []cli.Flag{
-			cli.StringFlag{
+			&cli.StringFlag{
 				Name:        "prometheus",
 				Value:       "http://localhost:9090",
 				Destination: &matplotlibFlag.Prometheus,
 			},
-			cli.DurationFlag{
+			&cli.DurationFlag{
 				Name:        "duration,d",
 				Usage:       "The duration to get timeseries from",
 				Value:       time.Hour,
 				Destination: &matplotlibFlag.Duration,
 			},
-			cli.TimestampFlag{
+			&cli.TimestampFlag{
 				Name:        "start,s",
 				Usage:       "The start time to get timeseries from",
 				Layout: 	 "2006-01-02T15:04:05",
 				Destination: &matplotlibFlag.Start,
 			},
-			cli.StringFlag{
+			&cli.StringFlag{
 				Name:        "title",
 				Usage:       "Give the gnuplot graph a title",
 				Destination: &matplotlibFlag.Title,
@@ -106,7 +106,7 @@ func main() {
 
 type flags struct {
 	Duration   time.Duration
-	Start      time.Time
+	Start      cli.Timestamp
 	Header     bool
 	Prometheus string
 }
@@ -117,8 +117,11 @@ func exportAction(c *cli.Context) error {
 	if !c.Args().Present() {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
-
-	start := flag.Start
+	
+	start, err := time.Parse("2006-01-02T15:04:05", flag.Start.String())
+	if err != nil {
+		return err
+	}
 	end := start.Add(flag.Duration)
 
 	results, err := Query(flag.Prometheus, start, end, c.Args().First())

@@ -7,12 +7,12 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 type gnuplotFlags struct {
 	Duration   time.Duration
-	Start	   time.Time
+	Start	   cli.Timestamp
 	Prometheus string
 	Title      string
 }
