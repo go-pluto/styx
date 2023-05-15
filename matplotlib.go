@@ -12,6 +12,7 @@ import (
 
 type matplotlibFlags struct {
 	Duration   time.Duration
+	Start	   time.Time
 	Prometheus string
 	Title      string
 }

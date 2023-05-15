@@ -12,6 +12,7 @@ import (
 
 type gnuplotFlags struct {
 	Duration   time.Duration
+	Start	   time.Time
 	Prometheus string
 	Title      string
 }
