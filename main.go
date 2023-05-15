@@ -23,6 +23,11 @@ func main() {
 			Value:       time.Hour,
 			Destination: &flag.Duration,
 		},
+		cli.DurationFlag{
+			Name:        "start,s",
+			Usage:       "The start time to get timeseries from",
+			Destination: &flag.Start,
+		},
 		cli.BoolTFlag{
 			Name:        "header",
 			Usage:       "Include a header into the csv file",
@@ -99,8 +104,8 @@ func exportAction(c *cli.Context) error {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
 
-	end := time.Now()
-	start := end.Add(-1 * flag.Duration)
+	start := flag.Start
+	end := start.Add(flag.Duration)
 
 	results, err := Query(flag.Prometheus, start, end, c.Args().First())
 	if err != nil {
