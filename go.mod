@@ -1,4 +1,4 @@
-module github.com/go-pluto/styx
+module github.com/mfranzil/styx
 
 go 1.18
 
