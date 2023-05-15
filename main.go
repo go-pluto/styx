@@ -23,10 +23,10 @@ func main() {
 			Value:       time.Hour,
 			Destination: &flag.Duration,
 		},
-		cli.TimeFlag{
+		cli.TimestampFlag{
 			Name:        "start,s",
 			Usage:       "The start time to get timeseries from",
-			Value:       time.Hour,
+			Layout: 	 "2006-01-02T15:04:05",
 			Destination: &flag.Start,
 		},
 		cli.BoolTFlag{
@@ -57,10 +57,10 @@ func main() {
 				Value:       time.Hour,
 				Destination: &gnuplotFlag.Duration,
 			},
-			cli.TimeFlag{
+			cli.TimestampFlag{
 				Name:        "start,s",
 				Usage:       "The start time to get timeseries from",
-				Value:       time.Hour,
+				Layout: 	 "2006-01-02T15:04:05",
 				Destination: &gnuplotFlag.Start,
 			},
 			cli.StringFlag{
@@ -79,16 +79,16 @@ func main() {
 				Value:       "http://localhost:9090",
 				Destination: &matplotlibFlag.Prometheus,
 			},
-			cli.TimeFlag{
+			cli.DurationFlag{
 				Name:        "duration,d",
 				Usage:       "The duration to get timeseries from",
 				Value:       time.Hour,
 				Destination: &matplotlibFlag.Duration,
 			},
-			cli.DurationFlag{
+			cli.TimestampFlag{
 				Name:        "start,s",
 				Usage:       "The start time to get timeseries from",
-				Value:       time.Hour,
+				Layout: 	 "2006-01-02T15:04:05",
 				Destination: &matplotlibFlag.Start,
 			},
 			cli.StringFlag{
