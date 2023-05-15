@@ -27,7 +27,6 @@ func main() {
 			Name:        "start,s",
 			Usage:       "The start time to get timeseries from",
 			Layout: 	 "2006-01-02T15:04:05",
-			Destination: &flag.Start,
 		},
 		&cli.BoolFlag{
 			Name:        "header",
@@ -61,7 +60,6 @@ func main() {
 				Name:        "start,s",
 				Usage:       "The start time to get timeseries from",
 				Layout: 	 "2006-01-02T15:04:05",
-				Destination: &gnuplotFlag.Start,
 			},
 			&cli.StringFlag{
 				Name:        "title",
@@ -89,7 +87,6 @@ func main() {
 				Name:        "start,s",
 				Usage:       "The start time to get timeseries from",
 				Layout: 	 "2006-01-02T15:04:05",
-				Destination: &matplotlibFlag.Start,
 			},
 			&cli.StringFlag{
 				Name:        "title",
@@ -106,7 +103,7 @@ func main() {
 
 type flags struct {
 	Duration   time.Duration
-	Start      cli.Timestamp
+	Start      time.Time
 	Header     bool
 	Prometheus string
 }
@@ -117,14 +114,13 @@ func exportAction(c *cli.Context) error {
 	if !c.Args().Present() {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
-	
-	start, err := time.Parse("2006-01-02T15:04:05", flag.Start.String())
-	if err != nil {
-		return err
-	}
+
+	start := c.Timestamp("start")
 	end := start.Add(flag.Duration)
 
-	results, err := Query(flag.Prometheus, start, end, c.Args().First())
+	// fmt.Printf("Querying %s from %s to %s\n", c.Args().First(), *start, end)
+
+	results, err := Query(flag.Prometheus, *start, end, c.Args().First())
 	if err != nil {
 		return err
 	}

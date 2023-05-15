@@ -24,10 +24,10 @@ func matplotlibAction(c *cli.Context) error {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
 
-	end := time.Now()
-	start := end.Add(-1 * matplotlibFlag.Duration)
+	start := c.Timestamp("start")
+	end := start.Add(flag.Duration)
 
-	results, err := Query(matplotlibFlag.Prometheus, start, end, c.Args().First())
+	results, err := Query(matplotlibFlag.Prometheus, *start, end, c.Args().First())
 	if err != nil {
 		return err
 	}
