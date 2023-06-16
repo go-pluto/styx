@@ -4,8 +4,8 @@ Export Prometheus data as CSV or directly plot with gnuplot & matplotlib.
 
 ## Installation
 
-```
-go install github.com/mfranzil/styx@latest
+```bash
+go install github.com/go-pluto/styx@latest
 ```
 
 If you want to simply export data from Prometheus as CSV then you don't need to install any thing else.
