@@ -4,29 +4,21 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/fatih/color"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
-
-type matplotlibFlags struct {
-	Duration   time.Duration
-	Prometheus string
-	Title      string
-}
-
-var matplotlibFlag matplotlibFlags
 
 func matplotlibAction(c *cli.Context) error {
 	if !c.Args().Present() {
 		return fmt.Errorf(color.RedString("need a query to run"))
 	}
 
-	end := time.Now()
-	start := end.Add(-1 * matplotlibFlag.Duration)
+	start := c.Timestamp("start")
+	end := start.Add(c.Duration("duration"))
+	prometheus := c.String("prometheus")
 
-	results, err := Query(matplotlibFlag.Prometheus, start, end, c.Args().First())
+	results, err := Query(prometheus, *start, end, c.Args().First())
 	if err != nil {
 		return err
 	}

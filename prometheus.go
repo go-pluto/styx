@@ -88,13 +88,7 @@ func Query(host string, start time.Time, end time.Time, query string) ([]Result,
 }
 
 func steps(dur time.Duration) int {
-	if dur < 15*time.Minute {
-		return 1
-	}
-	if dur < 30*time.Minute {
-		return 3
-	}
-	return int(dur.Minutes() / 4.2)
+	return 1
 }
 
 func metricName(metric map[string]string) string {
