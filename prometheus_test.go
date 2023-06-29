@@ -8,17 +8,24 @@ import (
 )
 
 func TestSteps(t *testing.T) {
-	assert.Equal(t, 1, steps(time.Minute))
-	assert.Equal(t, 1, steps(5*time.Minute))
-	assert.Equal(t, 3, steps(15*time.Minute))
-	assert.Equal(t, 7, steps(30*time.Minute))
-	assert.Equal(t, 14, steps(time.Hour))
-	assert.Equal(t, 28, steps(2*time.Hour))
-	assert.Equal(t, 85, steps(6*time.Hour))
-	assert.Equal(t, 171, steps(12*time.Hour))
-	assert.Equal(t, 342, steps(24*time.Hour))
-	assert.Equal(t, 685, steps(48*time.Hour))
-	assert.Equal(t, 2400, steps(168*time.Hour))
+	assert.Equal(t, 1, steps(time.Second, time.Second))
+	assert.Equal(t, 1, steps(time.Second, time.Millisecond))
+	assert.Equal(t, 1, steps(time.Second, time.Microsecond))
+	assert.Equal(t, 1, steps(time.Minute, time.Second))
+	assert.Equal(t, 1, steps(time.Minute, time.Millisecond))
+	assert.Equal(t, 1, steps(time.Minute, time.Microsecond))
+	assert.Equal(t, 1, steps(time.Hour, time.Second))
+	assert.Equal(t, 2, steps(time.Duration(12800)*time.Second*3, 2*time.Second))
+	assert.Equal(t, 1, steps(time.Duration(12800)*time.Second*3, 2*time.Millisecond))
+	assert.Equal(t, 1, steps(time.Duration(12800)*time.Second*3, 2*time.Microsecond))
+	assert.Equal(t, 1, steps(time.Duration(12800)*time.Second*3, 2*time.Nanosecond))
+	assert.Equal(t, 1, steps(time.Duration(12800)*time.Second*3, 100*time.Nanosecond))
+
+	// test on the fly 2023-06-28T13:19:16' + 15m with various resolutions
+	assert.Equal(t, 60, steps(
+		time.Date(2023, 6, 28, 13, 34, 16, 0, time.UTC).Sub(
+			time.Date(2023, 6, 28, 13, 19, 16, 0, time.UTC)), 60*time.Second))
+
 }
 
 func TestMetricName(t *testing.T) {
