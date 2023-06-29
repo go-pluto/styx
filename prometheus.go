@@ -28,7 +28,8 @@ type Result struct {
 	Values map[string]string
 }
 
-func Query(host string, start time.Time, end time.Time, query string) ([]Result, error) {
+func Query(host string, start time.Time, end time.Time,
+	resolution time.Duration, query string) ([]Result, error) {
 	u, err := url.Parse(host)
 	if err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func Query(host string, start time.Time, end time.Time, query string) ([]Result,
 	q.Set("query", query)
 	q.Set("start", fmt.Sprintf("%d", start.Unix()))
 	q.Set("end", fmt.Sprintf("%d", end.Unix()))
-	q.Set("step", fmt.Sprintf("%d", steps(end.Sub(start))))
+	q.Set("step", fmt.Sprintf("%d", steps(end.Sub(start), resolution)))
 	u.RawQuery = q.Encode()
 
 	response, err := http.Get(u.String())
@@ -87,8 +88,14 @@ func Query(host string, start time.Time, end time.Time, query string) ([]Result,
 	return results, nil
 }
 
-func steps(dur time.Duration) int {
-	return 1
+func steps(dur time.Duration, resolution time.Duration) int {
+	if dur < resolution {
+		return int(dur.Seconds())
+	}
+	if resolution <= time.Second {
+		resolution = time.Second
+	}
+	return int(resolution.Seconds())
 }
 
 func metricName(metric map[string]string) string {
