@@ -33,8 +33,8 @@ pip2 install matplotlib # macOS
 
 Once you've [installed](#Installation) styx you can export data.
 My recommendation is to actually build the queries in the Prometheus UI
-only if you've played with the data there and you know which query is best, 
-copy the query and use it to export the data with styx. 
+only if you've played with the data there and you know which query is best,
+copy the query and use it to export the data with styx.
 
 #### CSV
 
@@ -61,7 +61,7 @@ styx gnuplot --duration 6h 'sum(go_goroutines)' > goroutines.gnuplot
 styx gnuplot --prometheus http://prom.example.com 'sum(go_goroutines)' > goroutines.gnuplot
 ```
 
-Once you have written the generated content into a file you can use this to 
+Once you have written the generated content into a file you can use this to
 edit and plot the graph:
 
 ```bash
@@ -79,7 +79,7 @@ styx matplotlib --duration 6h 'sum(go_goroutines)' > goroutines.py
 styx matplotlib --prometheus http://prom.example.com 'sum(go_goroutines)' > goroutines.py
 ```
 
-Once you have written the generated content into a file you can use this to 
+Once you have written the generated content into a file you can use this to
 edit and plot the graph:
 
 ```bash
