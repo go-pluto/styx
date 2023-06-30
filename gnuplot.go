@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli/v2"
@@ -18,7 +19,16 @@ func gnuplotAction(c *cli.Context) error {
 	end := start.Add(c.Duration("duration"))
 	prometheus := c.String("prometheus")
 
-	results, err := Query(prometheus, *start, end, c.Args().First())
+	// if resolution is not set, use 1s as default
+	resolution := c.Duration("resolution")
+	if resolution == 0 || resolution == time.Duration(0) {
+		resolution = time.Second
+	}
+	if resolution < time.Second {
+		return fmt.Errorf(color.RedString("resolution must be >= 1s"))
+	}
+
+	results, err := Query(prometheus, *start, end, resolution, c.Args().First())
 	if err != nil {
 		return err
 	}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli/v2"
@@ -17,8 +18,16 @@ func matplotlibAction(c *cli.Context) error {
 	start := c.Timestamp("start")
 	end := start.Add(c.Duration("duration"))
 	prometheus := c.String("prometheus")
+	// if resolution is not set, use 1s as default
+	resolution := c.Duration("resolution")
+	if resolution == 0 || resolution == time.Duration(0) {
+		resolution = time.Second
+	}
+	if resolution < time.Second {
+		return fmt.Errorf(color.RedString("resolution must be >= 1s"))
+	}
 
-	results, err := Query(prometheus, *start, end, c.Args().First())
+	results, err := Query(prometheus, *start, end, resolution, c.Args().First())
 	if err != nil {
 		return err
 	}
