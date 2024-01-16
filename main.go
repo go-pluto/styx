@@ -26,6 +26,7 @@ func main() {
 			Name:   "start,s",
 			Usage:  "The start time to get timeseries from",
 			Layout: "2006-01-02T15:04:05",
+			Value: cli.NewTimestamp(time.Now().Truncate(time.Hour)),
 		},
 		&cli.DurationFlag{
 			Name:  "resolution,r",
@@ -60,6 +61,7 @@ func main() {
 				Name:   "start,s",
 				Usage:  "The start time to get timeseries from",
 				Layout: "2006-01-02T15:04:05",
+				Value: cli.NewTimestamp(time.Now().Truncate(time.Hour)),
 			},
 			&cli.DurationFlag{
 				Name:  "resolution,r",
@@ -89,6 +91,7 @@ func main() {
 				Name:   "start,s",
 				Usage:  "The start time to get timeseries from",
 				Layout: "2006-01-02T15:04:05",
+				Value: cli.NewTimestamp(time.Now().Truncate(time.Hour)),
 			},
 			&cli.DurationFlag{
 				Name:  "resolution,r",
